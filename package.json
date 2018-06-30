@@ -1,6 +1,7 @@
 {
   "name": "minesweeper",
   "author": "Kyle Goss",
+  "homepage": "https://kgwebsites.github.io/Minesweeper",
   "version": "0.1.0",
   "license": "MIT",
   "private": true,
