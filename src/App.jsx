@@ -1,9 +1,9 @@
 import React from 'react';
-import {inject, observer} from 'mobx-react';
+import {inject, observer, PropTypes} from 'mobx-react';
 import Score from './components/Score';
 import Board from './components/Board';
 import PlayButtons from './components/PlayButtons';
-import GamePaused from './components/GamePaused'
+import GamePaused from './components/GamePaused';
 import PauseGame from './components/PauseGame';
 import EnterName from './components/EnterName';
 import Leaderboard from './components/Leaderboard';
@@ -15,27 +15,36 @@ const App = ({app}) => {
     app.setMineCount(+e.target.dataset.mines);
     app.startGame();
   }
-  const showPlayButtons = app.state === 'won' || app.state === 'lost' || app.state === 'new';
+  const showPlayButtons =
+    app.state === 'won' || app.state === 'lost' || app.state === 'new';
   const paused = app.state === 'paused';
-  const inPlay = app.state ==='active';
+  const inPlay = app.state === 'active';
   return (
     <div>
       <StatusBar>
-        <Trophy onClick={app.toggleLeaderboard}><span role="img" aria-label="Leaderboard">🏆</span></Trophy>
+        <Trophy onClick={app.toggleLeaderboard}>
+          <span role="img" aria-label="Leaderboard">
+            🏆
+          </span>
+        </Trophy>
         <Score score={app.timeTrunc} />
-        {showPlayButtons && <PlayButtons start={start}/>}
+        {showPlayButtons && <PlayButtons start={start} />}
         {paused && <GamePaused start={app.resumeGame} restart={app.reset} />}
         {inPlay && <PauseGame pause={app.pauseGame} />}
       </StatusBar>
       {app.showLeaderboard && <Leaderboard bestScores={app.bestSorted} />}
       <AppView>
-        <Board/>
+        <Board />
         {app.user.new && (
           <EnterName name={app.user.name} updateName={app.user.updateName} />
         )}
       </AppView>
     </div>
   );
-}
+};
+
+App.propTypes = {
+  app: PropTypes.observableObject.isRequired,
+};
 
 export default inject('app')(observer(App));

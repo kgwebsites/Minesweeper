@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom';
 import {autorun} from 'mobx';
 import {Provider} from 'mobx-react';
 import {onSnapshot} from 'mobx-state-tree';
+import 'milligram/dist/milligram.min.css';
 import App from './App';
 import AppStore from './models/App';
 import registerServiceWorker from './registerServiceWorker';
-import 'milligram/dist/milligram.min.css';
 
 const localState = localStorage.getItem('minesweeper');
 const initialState = localState ? JSON.parse(localState) : {};
@@ -18,7 +18,7 @@ onSnapshot(app, snapshot => {
   localStorage.setItem('minesweeper', JSON.stringify(snapshot));
 });
 
-autorun((() => {
+autorun(() => {
   if (app.won) {
     app.setWonState();
     if (app.time < app.bestScoreMin) {
@@ -26,12 +26,12 @@ autorun((() => {
       else app.user.showNameInput();
     }
   }
-}));
+});
 
 ReactDOM.render(
   <Provider app={app}>
     <App />
   </Provider>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
 registerServiceWorker();

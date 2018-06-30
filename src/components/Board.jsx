@@ -1,13 +1,13 @@
 import React from 'react';
-import {inject, observer} from 'mobx-react';
+import {inject, observer, PropTypes} from 'mobx-react';
 import styled from 'styled-components';
-import posed from 'react-pose'
+import posed from 'react-pose';
 import Cell from './Cell';
 
 const GridWrapper = styled.div`
   display: flex;
   justify-content: center;
-`
+`;
 const Grid = styled.div`
   display: inline-grid;
   position: relative;
@@ -33,15 +33,15 @@ const CongratsStyle = styled.div`
 const Congrats = posed(CongratsStyle)({
   visible: {
     opacity: 1,
-    transition: props => ({ type: 'tween', yoyo: 1, duration: 1000 }),
+    transition: () => ({type: 'tween', yoyo: 1, duration: 1000}),
   },
   overlay: {
     zIndex: 9,
-  }
+  },
 });
 
 const Disabled = styled.div`
-  display: ${({disabled}) => disabled ? 'block' : 'none'};
+  display: ${({disabled}) => (disabled ? 'block' : 'none')};
   position: absolute;
   top: 0;
   bottom: 0;
@@ -50,18 +50,26 @@ const Disabled = styled.div`
   z-index: 10;
 `;
 
-const Board = ({app: {cells, columnCount, rowCount, state}}) => {
-  return (
-    <GridWrapper>
-      <Grid rows={rowCount} columns={columnCount}>
-        <Disabled disabled={state !== 'active' && state !== 'won' && state !== 'paused'} />
-        <Congrats initialPose="hidden" pose={state === 'won' && ['visible', 'overlay']}>
-          <span role="img" aria-label="Congrats">🎉</span>
-        </Congrats>
-        {cells.map(cell => <Cell key={cell.id} cell={cell} />)}
-      </Grid>
-    </GridWrapper>
-  );
+const Board = ({app: {cells, columnCount, rowCount, state}}) => (
+  <GridWrapper>
+    <Grid rows={rowCount} columns={columnCount}>
+      <Disabled
+        disabled={state !== 'active' && state !== 'won' && state !== 'paused'}
+      />
+      <Congrats
+        initialPose="hidden"
+        pose={state === 'won' && ['visible', 'overlay']}>
+        <span role="img" aria-label="Congrats">
+          🎉
+        </span>
+      </Congrats>
+      {cells.map(cell => <Cell key={cell.id} cell={cell} />)}
+    </Grid>
+  </GridWrapper>
+);
+
+Board.propTypes = {
+  app: PropTypes.observableObject.isRequired,
 };
 
 export default inject('app')(observer(Board));

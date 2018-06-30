@@ -1,5 +1,5 @@
-import React from 'react';
-import {observer} from 'mobx-react';
+import React, {Fragment} from 'react';
+import {observer, PropTypes} from 'mobx-react';
 import {getRoot} from 'mobx-state-tree';
 import styled from 'styled-components';
 
@@ -8,7 +8,7 @@ const CellWrapper = styled.div`
   position: relative;
   align-items: center;
   justify-content: center;
-  background-color: ${({unveiled}) => unveiled ? '#eee' : '#bdbdbd'};
+  background-color: ${({unveiled}) => (unveiled ? '#eee' : '#bdbdbd')};
   color: #333333;
   border: 1px solid #333;
   height: 50px;
@@ -20,19 +20,55 @@ const Mistake = styled.div`
   position: absolute;
 `;
 
-const Cell = ({cell}) => (
-  <CellWrapper unveiled={getRoot(cell).won || cell.unveiled} onClick={cell.unveil} onContextMenu={cell.mark}>
-    {getRoot(cell).lost && cell.marker === '🏴' && cell.value !== '💣' && (
-      <Mistake><span role="img" aria-label="Incorrect">🚫</span></Mistake>
-    )}
-    {(getRoot(cell).won || getRoot(cell).lost) ? (
-      cell.marker === '🏴' ? <span role="img" aria-label="Flag">{cell.marker}</span> : (
-        cell.value === '💣' ? <span role="img" aria-label="Mine">{cell.value}</span> : cell.value
-      )
-    ) : (
-        cell.marker ? cell.marker : (!cell.unveiled ? '' : cell.value)
-    )}
-  </CellWrapper>
-);
-
+const Cell = ({cell}) => {
+  const lost = getRoot(cell).state === 'lost';
+  const won = getRoot(cell).state === 'won';
+  const isFlag = cell.marker === '🏴';
+  const isBomb = cell.value === '💣';
+  const isMistake = isFlag && isBomb;
+  const isNormal = !isFlag && !isBomb;
+  const isHidden = !cell.unveiled;
+  return (
+    <CellWrapper
+      unveiled={getRoot(cell).won || cell.unveiled}
+      onClick={cell.unveil}
+      onContextMenu={cell.mark}>
+      {(lost || won) && (
+        <Fragment>
+          {isMistake && (
+            <Mistake>
+              <span role="img" aria-label="Incorrect">
+                🚫
+              </span>
+            </Mistake>
+          )}
+          {!isMistake &&
+            isFlag && (
+              <span role="img" aria-label="Flag">
+                {cell.marker}
+              </span>
+            )}
+          {!isMistake &&
+            isBomb && (
+              <span role="img" aria-label="Mine">
+                {cell.value}
+              </span>
+            )}
+          {isNormal && cell.value}
+        </Fragment>
+      )}
+      {!lost &&
+        !won && (
+          <Fragment>
+            {cell.marker && cell.marker}
+            {!cell.marker && isHidden && ''}
+            {!cell.marker && !isHidden && cell.value}
+          </Fragment>
+        )}
+    </CellWrapper>
+  );
+};
+Cell.propTypes = {
+  cell: PropTypes.observableObject.isRequired,
+};
 export default observer(Cell);

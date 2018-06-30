@@ -1,4 +1,5 @@
 import React, {PureComponent} from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const EnterNameStyle = styled.div`
@@ -12,16 +13,16 @@ const EnterNameStyle = styled.div`
   .Enter-Name__Content {
     width: 350px;
     max-width: 100%;
-    padding: .5rem;
+    padding: 0.5rem;
     background: #333333;
     box-shadow: 0px 1px 3px 1px rgba(51, 51, 51, 0.38);
     h2 {
-      margin-bottom: .5rem;
+      margin-bottom: 0.5rem;
     }
     form {
       margin-bottom: 0;
       input {
-        color: #EEEEEE;
+        color: #eeeeee;
       }
     }
     .Enter-Name__Content__Name {
@@ -31,14 +32,14 @@ const EnterNameStyle = styled.div`
 `;
 
 class EnterName extends PureComponent {
-  constructor({name}){
+  constructor({name}) {
     super();
     this.onChange = this.onChange.bind(this);
     this.saveName = this.saveName.bind(this);
     this.editMode = this.editMode.bind(this);
     this.state = {
       value: name || '',
-      edit: !name ? true : false,
+      edit: !name,
     };
   }
   onChange({target: {value}}) {
@@ -47,33 +48,42 @@ class EnterName extends PureComponent {
   saveName(e) {
     e.preventDefault();
     this.props.updateName(this.state.value);
-    this.setState({edit: false})
+    this.setState({edit: false});
   }
   editMode() {
-    this.setState({edit: true})
+    this.setState({edit: true});
   }
   render() {
-    const {highlight} = this.props;
     return (
-      <EnterNameStyle highlight={highlight}>
+      <EnterNameStyle>
         <div className="Enter-Name__Content">
           <h2>User Name</h2>
           {this.state.edit && (
             <form onSubmit={this.saveName}>
-              <input type="text" value={this.state.value} onChange={this.onChange} />
+              <input
+                type="text"
+                value={this.state.value}
+                onChange={this.onChange}
+              />
               <button>Save Name</button>
             </form>
           )}
           {!this.state.edit && (
             <div>
-              <div className="Enter-Name__Content__Name">{this.state.value}</div>
+              <div className="Enter-Name__Content__Name">
+                {this.state.value}
+              </div>
               <button onClick={this.editMode}>Edit Name</button>
             </div>
           )}
         </div>
       </EnterNameStyle>
-    )
+    );
   }
 }
+
+EnterName.propTypes = {
+  updateName: PropTypes.func.isRequired,
+};
 
 export default EnterName;

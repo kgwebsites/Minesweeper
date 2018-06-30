@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import {observer} from 'mobx-react';
+import {observer, PropTypes as MobxPropTypes} from 'mobx-react';
 import SubTitle from '../styles/SubTitle';
 
 const StyledLeaderboard = styled.div`
@@ -20,7 +21,7 @@ const StyledLeaderboard = styled.div`
     padding: 1rem;
     .Leaderboard__Content__Title {
       border-bottom: 1px solid;
-      padding-bottom: .5rem;
+      padding-bottom: 0.5rem;
     }
     .Leaderboard__Content__No-Winners {
       text-align: center;
@@ -36,7 +37,7 @@ const StyledLeaderboard = styled.div`
 
 const NewBestScore = styled.span`
   font-size: 12pt;
-  color: #4BB543;
+  color: #4bb543;
 `;
 
 const Leaderboard = ({bestScores, newBestScore}) => (
@@ -47,12 +48,24 @@ const Leaderboard = ({bestScores, newBestScore}) => (
         bestScores.map(score => (
           <li className="Leaderboard__Content__Score" key={score.id}>
             <span>{score.name}</span>
-            <span>{score.NewBestScore && <NewBestScore>New! </NewBestScore>}{score.value}</span>
+            <span>
+              {newBestScore && <NewBestScore>New! </NewBestScore>}
+              {score.value}
+            </span>
           </li>
         ))
-      ) : <div className="Leaderboard__Content__No-Winners">No winners yet...</div>}
+      ) : (
+        <div className="Leaderboard__Content__No-Winners">
+          No winners yet...
+        </div>
+      )}
     </div>
   </StyledLeaderboard>
 );
+
+Leaderboard.propTypes = {
+  bestScores: MobxPropTypes.observableArray.isRequired,
+  newBestScore: PropTypes.bool,
+};
 
 export default observer(Leaderboard);

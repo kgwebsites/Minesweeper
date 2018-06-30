@@ -1,12 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 export const AppView = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-    > :first-child {
-      grid-column-start: 2;
-    }
+  > :first-child {
+    grid-column-start: 2;
+  }
 `;
 
 export const StyledStatusBar = styled.div`
@@ -23,8 +24,8 @@ export const StyledStatusBar = styled.div`
 export const Trophy = styled.div`
   position: fixed;
   font-size: 3rem;
-  right: .5rem;
-  top: .5rem;
+  right: 0.5rem;
+  top: 0.5rem;
 `;
 
 export const StatusBar = ({children}) => (
@@ -32,3 +33,7 @@ export const StatusBar = ({children}) => (
     <div className="Status__Content">{children}</div>
   </StyledStatusBar>
 );
+
+StatusBar.propTypes = {
+  children: PropTypes.node.isRequired,
+};
