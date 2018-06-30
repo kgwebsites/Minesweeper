@@ -12,7 +12,8 @@ const StyledLeaderboard = styled.div`
   top: 12rem;
   width: 100%;
   .Leaderboard__Content {
-    background: #333333;
+    background: #1fbe69;
+    box-shadow: 0px 10px 15px -5px #333;
     width: 300px;
     max-width: 100%;
     border: 1px solid #333;
@@ -23,6 +24,12 @@ const StyledLeaderboard = styled.div`
     }
     .Leaderboard__Content__No-Winners {
       text-align: center;
+    }
+    .Leaderboard__Content__Score {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
   }
 `;
@@ -38,7 +45,10 @@ const Leaderboard = ({bestScores, newBestScore}) => (
       <SubTitle className="Leaderboard__Content__Title">Top Scores</SubTitle>
       {bestScores.length !== 0 ? (
         bestScores.map(score => (
-          <li key={score.id}>{score.value} - {score.name} {score.NewBestScore && <NewBestScore> New!</NewBestScore>}</li>
+          <li className="Leaderboard__Content__Score" key={score.id}>
+            <span>{score.name}</span>
+            <span>{score.NewBestScore && <NewBestScore>New! </NewBestScore>}{score.value}</span>
+          </li>
         ))
       ) : <div className="Leaderboard__Content__No-Winners">No winners yet...</div>}
     </div>

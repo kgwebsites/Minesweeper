@@ -7,9 +7,7 @@ let timer;
 
 const AppStore = types.model('AppStore', {
   user: types.optional(User, {}),
-  gameOn: false,
-  paused: false,
-  lost: false,
+  state: 'new',
   showLeaderboard: false,
   columnCount: 8,
   rowCount: 8,
@@ -52,6 +50,9 @@ const AppStore = types.model('AppStore', {
   setMineCount(mines) {
     self.mineCount = mines;
   },
+  setWonState() {
+    self.state = 'won';
+  },
   generateMines() {
     const arr = []
     while(arr.length < self.mineCount){
@@ -88,9 +89,6 @@ const AppStore = types.model('AppStore', {
       if (cell && !cell.unveiled) cell.unveil();
     })
   },
-  toggleBoard() {
-    self.gameOn = !self.gameOn;
-  },
   toggleLeaderboard() {
     self.showLeaderboard = !self.showLeaderboard;
   },
@@ -120,17 +118,17 @@ const AppStore = types.model('AppStore', {
   },
   startGame() {
     self.reset();
-    self.paused = false;
+    self.state = 'active';
     self.generateMines();
     self.generateCells();
     self.timer();
   },
   pauseGame() {
-    self.paused = true;
+    self.state = 'paused';
     self.stopTimer();
   },
   resumeGame() {
-    self.paused = false;
+    self.state = 'active';
     self.timer();
   },
   incrementUnveiled() {
@@ -138,18 +136,14 @@ const AppStore = types.model('AppStore', {
   },
   youLose() {
     self.stopTimer();
-    self.lost = true;
+    self.state = 'lost';
   },
   reset() {
     self.totalUnveiled = 0;
     self.time = 0;
-    self.lost = false;
+    self.state = 'new';
     self.cells = [];
   },
-  restart() {
-    self.reset();
-    self.gameOn = false;
-  }
 }));
 
 export default AppStore;

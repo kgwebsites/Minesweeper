@@ -2,30 +2,31 @@ import React, {PureComponent} from 'react';
 import styled from 'styled-components';
 
 const EnterNameStyle = styled.div`
-  border: 1px solid ${({highlight}) => highlight ? 'firebrick' : 'transparent'};
   position: fixed;
   z-index: 100;
-  top: 0;
-  bottom: 0;
+  top: 12rem;
   left: 0;
   right: 0;
   display: flex;
-  align-items: center;
   justify-content: center;
   .Enter-Name__Content {
     width: 350px;
     max-width: 100%;
     padding: .5rem;
-    background: #ffffff;
+    background: #333333;
     box-shadow: 0px 1px 3px 1px rgba(51, 51, 51, 0.38);
     h2 {
       margin-bottom: .5rem;
     }
     form {
       margin-bottom: 0;
+      input {
+        color: #EEEEEE;
+      }
     }
     .Enter-Name__Content__Name {
       margin-bottom: 15px;
+    }
   }
 `;
 

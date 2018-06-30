@@ -10,9 +10,8 @@ import 'milligram/dist/milligram.min.css';
 
 const localState = localStorage.getItem('minesweeper');
 const initialState = localState ? JSON.parse(localState) : {};
-initialState.paused = initialState.time !== 0 && !initialState.lost;
-initialState.gameOn = initialState.time !== 0 && !initialState.lost;
-if (!initialState.gameOn) initialState.time = 0;
+if (initialState.time === 0) initialState.state = 'new';
+else if (initialState.state === 'active') initialState.state = 'paused';
 const app = AppStore.create(initialState);
 
 onSnapshot(app, snapshot => {
@@ -20,9 +19,12 @@ onSnapshot(app, snapshot => {
 });
 
 autorun((() => {
-  if (app.won && (app.time < app.bestScoreMin)) {
-    if (app.user.name) app.setNewBest();
-    else app.user.showNameInput();
+  if (app.won) {
+    app.setWonState();
+    if (app.time < app.bestScoreMin) {
+      if (app.user.name) app.setNewBest();
+      else app.user.showNameInput();
+    }
   }
 }));
 

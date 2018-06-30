@@ -50,12 +50,12 @@ const Disabled = styled.div`
   z-index: 10;
 `;
 
-const Board = ({app: {cells, columnCount, rowCount, lost, won, paused}}) => {
+const Board = ({app: {cells, columnCount, rowCount, state}}) => {
   return (
     <GridWrapper>
       <Grid rows={rowCount} columns={columnCount}>
-        <Disabled disabled={lost || won || paused} />
-        <Congrats initialPose="hidden" pose={won && !paused && ['visible', 'overlay']}>
+        <Disabled disabled={state !== 'active' && state !== 'won' && state !== 'paused'} />
+        <Congrats initialPose="hidden" pose={state === 'won' && ['visible', 'overlay']}>
           <span role="img" aria-label="Congrats">🎉</span>
         </Congrats>
         {cells.map(cell => <Cell key={cell.id} cell={cell} />)}

@@ -8,7 +8,8 @@ const CellWrapper = styled.div`
   position: relative;
   align-items: center;
   justify-content: center;
-  background-color: ${({unveiled}) => unveiled ? '#eee' : '#ddd'};
+  background-color: ${({unveiled}) => unveiled ? '#eee' : '#bdbdbd'};
+  color: #333333;
   border: 1px solid #333;
   height: 50px;
   width: 50px;
